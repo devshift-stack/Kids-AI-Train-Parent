@@ -46,6 +46,8 @@ class ChildDetailScreen extends ConsumerWidget {
             const SizedBox(height: 24),
             _buildGamesSection(context, ref),
             const SizedBox(height: 24),
+            _buildYouTubeSection(context, ref),
+            const SizedBox(height: 24),
             _buildLinkedDevicesSection(context, ref),
             const SizedBox(height: 100),
           ],
@@ -506,6 +508,161 @@ class ChildDetailScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildYouTubeSection(BuildContext context, WidgetRef ref) {
+    final settings = child.youtubeSettings;
+
+    return _buildSection(
+      title: 'YouTube Belohnungssystem',
+      icon: Icons.play_circle_fill,
+      child: Column(
+        children: [
+          // Aktivieren/Deaktivieren Toggle
+          _buildToggleRow(
+            'YouTube aktivieren',
+            'Kind kann Videos als Belohnung schauen',
+            settings.enabled,
+            (value) async {
+              final notifier = ref.read(childrenNotifierProvider.notifier);
+              await notifier.updateChild(
+                child.copyWith(
+                  youtubeSettings: settings.copyWith(enabled: value),
+                ),
+              );
+            },
+          ),
+          if (settings.enabled) ...[
+            const SizedBox(height: 16),
+            // Minuten Video vor Aufgaben
+            _buildSliderSetting(
+              context,
+              ref,
+              label: 'Video-Zeit vor Aufgaben',
+              value: settings.watchMinutesBeforeTasks,
+              min: 5,
+              max: 30,
+              unit: 'Min',
+              onChanged: (value) async {
+                final notifier = ref.read(childrenNotifierProvider.notifier);
+                await notifier.updateChild(
+                  child.copyWith(
+                    youtubeSettings: settings.copyWith(watchMinutesBeforeTasks: value),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+            // Anzahl Aufgaben
+            _buildSliderSetting(
+              context,
+              ref,
+              label: 'Aufgaben zum Freischalten',
+              value: settings.tasksRequired,
+              min: 1,
+              max: 10,
+              unit: 'Aufgaben',
+              onChanged: (value) async {
+                final notifier = ref.read(childrenNotifierProvider.notifier);
+                await notifier.updateChild(
+                  child.copyWith(
+                    youtubeSettings: settings.copyWith(tasksRequired: value),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+            // Max tägliche Zeit
+            _buildSliderSetting(
+              context,
+              ref,
+              label: 'Max. YouTube-Zeit pro Tag',
+              value: settings.maxDailyMinutes,
+              min: 15,
+              max: 120,
+              unit: 'Min',
+              onChanged: (value) async {
+                final notifier = ref.read(childrenNotifierProvider.notifier);
+                await notifier.updateChild(
+                  child.copyWith(
+                    youtubeSettings: settings.copyWith(maxDailyMinutes: value),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            // Info Box
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF0000).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: const Color(0xFFFF0000).withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.info_outline, color: Color(0xFFFF6B6B), size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Nach ${settings.watchMinutesBeforeTasks} Min Video muss ${child.name} ${settings.tasksRequired} Aufgaben lösen.',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.8),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSliderSetting(
+    BuildContext context,
+    WidgetRef ref, {
+    required String label,
+    required int value,
+    required int min,
+    required int max,
+    required String unit,
+    required Function(int) onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+            ),
+            Text(
+              '$value $unit',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        Slider(
+          value: value.toDouble(),
+          min: min.toDouble(),
+          max: max.toDouble(),
+          divisions: max - min,
+          activeColor: const Color(0xFF6C63FF),
+          inactiveColor: Colors.white.withValues(alpha: 0.2),
+          onChanged: (v) => onChanged(v.round()),
+        ),
+      ],
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'time_limit.dart';
 import 'leaderboard_consent.dart';
 import 'accessibility_settings.dart';
+import 'youtube_settings.dart';
 
 class Child extends Equatable {
   final String id;
@@ -17,6 +18,7 @@ class Child extends Equatable {
   final LeaderboardConsent leaderboardConsent;
   final AccessibilitySettings accessibilitySettings;
   final Map<String, GameSettings> gameSettings;
+  final YouTubeSettings youtubeSettings;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -33,6 +35,7 @@ class Child extends Equatable {
     required this.leaderboardConsent,
     this.accessibilitySettings = const AccessibilitySettings(),
     this.gameSettings = const {},
+    this.youtubeSettings = const YouTubeSettings(),
     required this.createdAt,
     required this.updatedAt,
   });
@@ -72,6 +75,7 @@ class Child extends Equatable {
       leaderboardConsent: LeaderboardConsent.fromMap(data['leaderboardConsent'] ?? {}),
       accessibilitySettings: AccessibilitySettings.fromMap(data['accessibilitySettings'] ?? {}),
       gameSettings: _parseGameSettings(data['gameSettings']),
+      youtubeSettings: YouTubeSettings.fromMap(data['youtubeSettings'] ?? {}),
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
@@ -96,6 +100,7 @@ class Child extends Equatable {
       'leaderboardConsent': leaderboardConsent.toMap(),
       'accessibilitySettings': accessibilitySettings.toMap(),
       'gameSettings': gameSettings.map((key, value) => MapEntry(key, value.toMap())),
+      'youtubeSettings': youtubeSettings.toMap(),
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(DateTime.now()),
     };
@@ -113,6 +118,7 @@ class Child extends Equatable {
     LeaderboardConsent? leaderboardConsent,
     AccessibilitySettings? accessibilitySettings,
     Map<String, GameSettings>? gameSettings,
+    YouTubeSettings? youtubeSettings,
   }) {
     return Child(
       id: id,
@@ -127,13 +133,14 @@ class Child extends Equatable {
       leaderboardConsent: leaderboardConsent ?? this.leaderboardConsent,
       accessibilitySettings: accessibilitySettings ?? this.accessibilitySettings,
       gameSettings: gameSettings ?? this.gameSettings,
+      youtubeSettings: youtubeSettings ?? this.youtubeSettings,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
     );
   }
 
   @override
-  List<Object?> get props => [id, name, age, parentCode, isLinked, timeLimit, leaderboardConsent];
+  List<Object?> get props => [id, name, age, parentCode, isLinked, timeLimit, leaderboardConsent, youtubeSettings];
 }
 
 class GameSettings extends Equatable {
