@@ -5,6 +5,7 @@ import '../../providers/auth_provider.dart';
 import '../../models/child.dart';
 import '../children/add_child_screen.dart';
 import '../children/child_detail_screen.dart';
+import '../settings/settings_screen.dart';
 import '../../widgets/cards/child_card.dart';
 
 class DashboardScreen extends ConsumerWidget {
@@ -30,7 +31,10 @@ class DashboardScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white70),
             onPressed: () {
-              // TODO: Navigate to settings
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
             },
           ),
           IconButton(
