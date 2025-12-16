@@ -43,6 +43,8 @@ class ChildDetailScreen extends ConsumerWidget {
             const SizedBox(height: 24),
             _buildSubtitlesSection(context, ref),
             const SizedBox(height: 24),
+            _buildGamesSection(context, ref),
+            const SizedBox(height: 24),
             _buildLinkedDevicesSection(),
             const SizedBox(height: 100),
           ],
@@ -369,6 +371,122 @@ class ChildDetailScreen extends ConsumerWidget {
                 ),
               );
             }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGamesSection(BuildContext context, WidgetRef ref) {
+    // Spiele-Definitionen
+    const games = [
+      {'id': 'letters', 'name': 'ABC Buchstaben', 'icon': Icons.abc},
+      {'id': 'numbers', 'name': '123 Zahlen', 'icon': Icons.pin},
+      {'id': 'colors', 'name': 'Farben', 'icon': Icons.palette},
+      {'id': 'shapes', 'name': 'Formen', 'icon': Icons.category},
+      {'id': 'animals', 'name': 'Tiere', 'icon': Icons.pets},
+      {'id': 'stories', 'name': 'Geschichten', 'icon': Icons.auto_stories},
+      {'id': 'quiz', 'name': 'Quiz', 'icon': Icons.quiz},
+    ];
+
+    return _buildSection(
+      title: 'Spiele',
+      icon: Icons.sports_esports,
+      child: Column(
+        children: [
+          Text(
+            'Aktiviere oder deaktiviere einzelne Spiele für ${child.name}.',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.6),
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ...games.map((game) {
+            final gameId = game['id'] as String;
+            final gameName = game['name'] as String;
+            final gameIcon = game['icon'] as IconData;
+
+            // Hole aktuelle Einstellung (Default: aktiviert)
+            final currentSettings = child.gameSettings[gameId] ?? const GameSettings();
+            final isEnabled = currentSettings.isEnabled;
+
+            return _buildGameToggle(
+              gameId: gameId,
+              name: gameName,
+              icon: gameIcon,
+              isEnabled: isEnabled,
+              isLiankoOnly: gameId == 'quiz',
+              onChanged: (value) async {
+                final notifier = ref.read(childrenNotifierProvider.notifier);
+                final updatedSettings = Map<String, GameSettings>.from(child.gameSettings);
+                updatedSettings[gameId] = currentSettings.copyWith(isEnabled: value);
+
+                await notifier.updateChild(
+                  child.copyWith(gameSettings: updatedSettings),
+                );
+              },
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGameToggle({
+    required String gameId,
+    required String name,
+    required IconData icon,
+    required bool isEnabled,
+    required Function(bool) onChanged,
+    bool isLiankoOnly = false,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(isEnabled ? 0.08 : 0.03),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isEnabled
+              ? const Color(0xFF6C63FF).withOpacity(0.3)
+              : Colors.white.withOpacity(0.1),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: isEnabled ? const Color(0xFF6C63FF) : Colors.white38,
+            size: 24,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: TextStyle(
+                    color: isEnabled ? Colors.white : Colors.white54,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (isLiankoOnly)
+                  Text(
+                    'Nur in Lianko',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.4),
+                      fontSize: 11,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          Switch(
+            value: isEnabled,
+            onChanged: onChanged,
+            activeColor: const Color(0xFF6C63FF),
           ),
         ],
       ),
