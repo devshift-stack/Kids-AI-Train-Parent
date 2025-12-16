@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'core/theme/parent_theme.dart';
 import 'providers/pin_provider.dart';
@@ -13,6 +14,9 @@ import 'screens/onboarding/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // EasyLocalization initialisieren
+  await EasyLocalization.ensureInitialized();
 
   // Firebase initialisieren
   await Firebase.initializeApp();
@@ -30,7 +34,18 @@ void main() async {
     ),
   );
 
-  runApp(const ProviderScope(child: ParentApp()));
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('de'),
+        Locale('en'),
+        Locale('tr'),
+      ],
+      path: 'assets/locales',
+      fallbackLocale: const Locale('de'),
+      child: const ProviderScope(child: ParentApp()),
+    ),
+  );
 }
 
 class ParentApp extends StatelessWidget {
@@ -42,6 +57,9 @@ class ParentApp extends StatelessWidget {
       title: 'Kids AI Parent Dashboard',
       debugShowCheckedModeBanner: false,
       theme: ParentTheme.dark,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       home: const AppRoot(),
     );
   }

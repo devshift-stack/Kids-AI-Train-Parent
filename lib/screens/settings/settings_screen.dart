@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../providers/pin_provider.dart';
 import 'co_parent_screen.dart';
 
@@ -66,7 +67,99 @@ class SettingsScreen extends ConsumerWidget {
                 ),
             ],
           ),
+          const SizedBox(height: 16),
+          _buildSection(
+            title: 'Sprache',
+            children: [
+              _buildSettingTile(
+                icon: Icons.language,
+                title: 'App-Sprache',
+                subtitle: _getCurrentLanguageName(context),
+                onTap: () => _showLanguageDialog(context),
+              ),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+
+  String _getCurrentLanguageName(BuildContext context) {
+    final locale = context.locale;
+    switch (locale.languageCode) {
+      case 'de':
+        return 'Deutsch';
+      case 'en':
+        return 'English';
+      case 'tr':
+        return 'Türkçe';
+      default:
+        return 'Deutsch';
+    }
+  }
+
+  Future<void> _showLanguageDialog(BuildContext context) async {
+    final languages = [
+      {'code': 'de', 'name': 'Deutsch', 'flag': '🇩🇪'},
+      {'code': 'en', 'name': 'English', 'flag': '🇬🇧'},
+      {'code': 'tr', 'name': 'Türkçe', 'flag': '🇹🇷'},
+    ];
+
+    await showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF2D2D44),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 16),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Sprache wählen',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ...languages.map((lang) {
+              final isSelected = context.locale.languageCode == lang['code'];
+              return ListTile(
+                leading: Text(
+                  lang['flag']!,
+                  style: const TextStyle(fontSize: 24),
+                ),
+                title: Text(
+                  lang['name']!,
+                  style: TextStyle(
+                    color: isSelected ? const Color(0xFF6C63FF) : Colors.white,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+                trailing: isSelected
+                    ? const Icon(Icons.check_circle, color: Color(0xFF6C63FF))
+                    : null,
+                onTap: () {
+                  context.setLocale(Locale(lang['code']!));
+                  Navigator.pop(context);
+                },
+              );
+            }),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }
