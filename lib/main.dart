@@ -6,8 +6,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'core/theme/parent_theme.dart';
 import 'providers/auth_provider.dart';
 import 'providers/pin_provider.dart';
+import 'providers/onboarding_provider.dart';
 import 'screens/auth/pin_lock_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
+import 'screens/onboarding/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,32 +42,50 @@ class ParentApp extends StatelessWidget {
   }
 }
 
-/// Root Widget das Auth-State und PIN-Lock verwaltet
+/// Root Widget das Onboarding, Auth-State und PIN-Lock verwaltet
 class AppRoot extends ConsumerWidget {
   const AppRoot({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final onboardingCompleted = ref.watch(onboardingCompletedProvider);
     final authState = ref.watch(authStateProvider);
     final pinState = ref.watch(pinUnlockStateProvider);
 
-    return authState.when(
-      data: (user) {
-        if (user == null) {
-          // Nicht eingeloggt -> Login Screen
-          return const LoginScreen();
+    // Erst Onboarding prüfen
+    return onboardingCompleted.when(
+      data: (completed) {
+        if (!completed) {
+          // Onboarding noch nicht abgeschlossen
+          return OnboardingScreen(
+            onComplete: () {
+              ref.invalidate(onboardingCompletedProvider);
+            },
+          );
         }
 
-        // Eingeloggt -> PIN-Check
-        switch (pinState) {
-          case PinUnlockState.loading:
-            return const LoadingScreen();
-          case PinUnlockState.locked:
-            return const PinLockScreen();
-          case PinUnlockState.unlocked:
-          case PinUnlockState.noPinSet:
-            return const DashboardScreen();
-        }
+        // Onboarding fertig -> Auth prüfen
+        return authState.when(
+          data: (user) {
+            if (user == null) {
+              // Nicht eingeloggt -> Login Screen
+              return const LoginScreen();
+            }
+
+            // Eingeloggt -> PIN-Check
+            switch (pinState) {
+              case PinUnlockState.loading:
+                return const LoadingScreen();
+              case PinUnlockState.locked:
+                return const PinLockScreen();
+              case PinUnlockState.unlocked:
+              case PinUnlockState.noPinSet:
+                return const DashboardScreen();
+            }
+          },
+          loading: () => const LoadingScreen(),
+          error: (error, _) => ErrorScreen(message: error.toString()),
+        );
       },
       loading: () => const LoadingScreen(),
       error: (error, _) => ErrorScreen(message: error.toString()),
