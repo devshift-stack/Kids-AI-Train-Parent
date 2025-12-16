@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function: Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function: Check if user owns this parent document
+    function isOwner(parentId) {
+      return isAuthenticated() && request.auth.uid == parentId;
+    }
+
+    // Helper function: Check if user is a co-parent
+    function isCoParent(parentId) {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/parents/$(parentId)) &&
+        get(/databases/$(database)/documents/parents/$(parentId)).data.coParents[request.auth.uid] == true;
+    }
+
+    // Parents collection
+    match /parents/{parentId} {
+      // Only owner can read/write their own parent document
+      allow read, write: if isOwner(parentId);
+
+      // Children subcollection
+      match /children/{childId} {
+        // Owner has full access
+        allow read, write: if isOwner(parentId);
+        // Co-parents can only read
+        allow read: if isCoParent(parentId);
+      }
+
+      // Usage stats subcollection (read-only for co-parents)
+      match /children/{childId}/usageStats/{statId} {
+        allow read, write: if isOwner(parentId);
+        allow read: if isCoParent(parentId);
+      }
+    }
+
+    // Parent codes collection (for code lookup across all parents)
+    // Used by kids app to validate codes
+    match /{path=**}/children/{childId} {
+      // Allow querying by parentCode for code validation
+      allow read: if isAuthenticated() &&
+        resource.data.parentCode != null;
+    }
+  }
+}
