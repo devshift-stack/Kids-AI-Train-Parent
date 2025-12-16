@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'core/theme/parent_theme.dart';
+import 'services/notification_service.dart';
 import 'providers/pin_provider.dart';
 import 'providers/onboarding_provider.dart';
 import 'screens/auth/pin_lock_screen.dart';
@@ -21,10 +23,16 @@ void main() async {
   // Firebase initialisieren
   await Firebase.initializeApp();
 
+  // Firebase Messaging Background Handler registrieren
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
   // Anonymous Auth (automatisch)
   if (FirebaseAuth.instance.currentUser == null) {
     await FirebaseAuth.instance.signInAnonymously();
   }
+
+  // Push Notifications initialisieren
+  await NotificationService().initialize();
 
   // Status bar transparent
   SystemChrome.setSystemUIOverlayStyle(

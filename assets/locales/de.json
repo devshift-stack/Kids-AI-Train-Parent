@@ -108,6 +108,15 @@
   "deactivate": "Deaktivieren",
   "pin_changed": "PIN geändert",
 
+  "settings_notifications": "Benachrichtigungen",
+  "push_notifications": "Push-Benachrichtigungen",
+  "activity_notifications": "Aktivitäts-Benachrichtigungen",
+  "activity_notifications_desc": "Wenn Kind spielt oder Pause macht",
+  "daily_report": "Täglicher Bericht",
+  "daily_report_desc": "Zusammenfassung am Abend",
+  "device_notifications": "Geräte-Benachrichtigungen",
+  "device_notifications_desc": "Wenn Gerät verbunden/getrennt wird",
+
   "error": "Fehler",
   "loading": "Laden...",
   "success": "Erfolgreich"

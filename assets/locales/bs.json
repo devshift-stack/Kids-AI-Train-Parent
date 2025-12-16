@@ -111,6 +111,15 @@
   "deactivate": "Deaktiviraj",
   "pin_changed": "PIN promijenjen",
 
+  "settings_notifications": "Obavještenja",
+  "push_notifications": "Push obavještenja",
+  "activity_notifications": "Obavještenja o aktivnostima",
+  "activity_notifications_desc": "Kada dijete igra ili pravi pauzu",
+  "daily_report": "Dnevni izvještaj",
+  "daily_report_desc": "Sažetak navečer",
+  "device_notifications": "Obavještenja o uređajima",
+  "device_notifications_desc": "Kada se uređaj poveže/odvoji",
+
   "error": "Greška",
   "loading": "Učitavanje...",
   "success": "Uspješno"

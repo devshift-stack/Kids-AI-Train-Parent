@@ -108,6 +108,15 @@
   "deactivate": "Devre dışı bırak",
   "pin_changed": "PIN değiştirildi",
 
+  "settings_notifications": "Bildirimler",
+  "push_notifications": "Push bildirimleri",
+  "activity_notifications": "Aktivite bildirimleri",
+  "activity_notifications_desc": "Çocuk oynarken veya mola verirken",
+  "daily_report": "Günlük rapor",
+  "daily_report_desc": "Akşam özeti",
+  "device_notifications": "Cihaz bildirimleri",
+  "device_notifications_desc": "Cihaz bağlandığında/bağlantısı kesildiğinde",
+
   "error": "Hata",
   "loading": "Yükleniyor...",
   "success": "Başarılı"

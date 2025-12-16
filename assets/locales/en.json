@@ -108,6 +108,15 @@
   "deactivate": "Deactivate",
   "pin_changed": "PIN changed",
 
+  "settings_notifications": "Notifications",
+  "push_notifications": "Push notifications",
+  "activity_notifications": "Activity notifications",
+  "activity_notifications_desc": "When child plays or takes a break",
+  "daily_report": "Daily report",
+  "daily_report_desc": "Summary in the evening",
+  "device_notifications": "Device notifications",
+  "device_notifications_desc": "When device connects/disconnects",
+
   "error": "Error",
   "loading": "Loading...",
   "success": "Success"

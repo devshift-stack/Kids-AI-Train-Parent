@@ -1,8 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/pin_provider.dart';
 import 'co_parent_screen.dart';
+
+/// Provider for notification settings
+final notificationSettingsProvider = StateNotifierProvider<NotificationSettingsNotifier, NotificationSettings>((ref) {
+  return NotificationSettingsNotifier();
+});
+
+class NotificationSettings {
+  final bool enabled;
+  final bool activityAlerts;
+  final bool dailyReport;
+  final bool deviceAlerts;
+
+  const NotificationSettings({
+    this.enabled = true,
+    this.activityAlerts = true,
+    this.dailyReport = false,
+    this.deviceAlerts = true,
+  });
+
+  NotificationSettings copyWith({
+    bool? enabled,
+    bool? activityAlerts,
+    bool? dailyReport,
+    bool? deviceAlerts,
+  }) {
+    return NotificationSettings(
+      enabled: enabled ?? this.enabled,
+      activityAlerts: activityAlerts ?? this.activityAlerts,
+      dailyReport: dailyReport ?? this.dailyReport,
+      deviceAlerts: deviceAlerts ?? this.deviceAlerts,
+    );
+  }
+}
+
+class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
+  NotificationSettingsNotifier() : super(const NotificationSettings()) {
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = NotificationSettings(
+      enabled: prefs.getBool('notif_enabled') ?? true,
+      activityAlerts: prefs.getBool('notif_activity') ?? true,
+      dailyReport: prefs.getBool('notif_daily') ?? false,
+      deviceAlerts: prefs.getBool('notif_device') ?? true,
+    );
+  }
+
+  Future<void> setEnabled(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('notif_enabled', value);
+    state = state.copyWith(enabled: value);
+  }
+
+  Future<void> setActivityAlerts(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('notif_activity', value);
+    state = state.copyWith(activityAlerts: value);
+  }
+
+  Future<void> setDailyReport(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('notif_daily', value);
+    state = state.copyWith(dailyReport: value);
+  }
+
+  Future<void> setDeviceAlerts(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('notif_device', value);
+    state = state.copyWith(deviceAlerts: value);
+  }
+}
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -10,6 +84,8 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pinConfig = ref.watch(pinConfigProvider.notifier);
+    final notifSettings = ref.watch(notificationSettingsProvider);
+    final notifNotifier = ref.read(notificationSettingsProvider.notifier);
 
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A2E),
@@ -65,6 +141,54 @@ class SettingsScreen extends ConsumerWidget {
                   subtitle: 'Neuen PIN festlegen',
                   onTap: () => _showChangePinDialog(context, ref),
                 ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _buildSection(
+            title: 'Benachrichtigungen',
+            children: [
+              _buildSettingTile(
+                icon: Icons.notifications,
+                title: 'Push-Benachrichtigungen',
+                subtitle: notifSettings.enabled ? 'Aktiviert' : 'Deaktiviert',
+                trailing: Switch(
+                  value: notifSettings.enabled,
+                  onChanged: (value) => notifNotifier.setEnabled(value),
+                  activeTrackColor: const Color(0xFF6C63FF),
+                ),
+              ),
+              if (notifSettings.enabled) ...[
+                _buildSettingTile(
+                  icon: Icons.child_care,
+                  title: 'Aktivitäts-Benachrichtigungen',
+                  subtitle: 'Wenn Kind spielt oder Pause macht',
+                  trailing: Switch(
+                    value: notifSettings.activityAlerts,
+                    onChanged: (value) => notifNotifier.setActivityAlerts(value),
+                    activeTrackColor: const Color(0xFF6C63FF),
+                  ),
+                ),
+                _buildSettingTile(
+                  icon: Icons.summarize,
+                  title: 'Täglicher Bericht',
+                  subtitle: 'Zusammenfassung am Abend',
+                  trailing: Switch(
+                    value: notifSettings.dailyReport,
+                    onChanged: (value) => notifNotifier.setDailyReport(value),
+                    activeTrackColor: const Color(0xFF6C63FF),
+                  ),
+                ),
+                _buildSettingTile(
+                  icon: Icons.devices,
+                  title: 'Geräte-Benachrichtigungen',
+                  subtitle: 'Wenn Gerät verbunden/getrennt wird',
+                  trailing: Switch(
+                    value: notifSettings.deviceAlerts,
+                    onChanged: (value) => notifNotifier.setDeviceAlerts(value),
+                    activeTrackColor: const Color(0xFF6C63FF),
+                  ),
+                ),
+              ],
             ],
           ),
           const SizedBox(height: 16),
