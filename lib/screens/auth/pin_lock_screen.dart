@@ -47,7 +47,7 @@ class _PinLockScreenState extends ConsumerState<PinLockScreen> {
                 'Gib deinen 4-stelligen PIN ein',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white.withOpacity(0.6),
+                  color: Colors.white.withValues(alpha:0.6),
                 ),
               ),
               const SizedBox(height: 48),
@@ -104,7 +104,7 @@ class _PinLockScreenState extends ConsumerState<PinLockScreen> {
             shape: BoxShape.circle,
             color: isFilled ? Colors.white : Colors.transparent,
             border: Border.all(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha:0.5),
               width: 2,
             ),
           ),
@@ -149,13 +149,13 @@ class _PinLockScreenState extends ConsumerState<PinLockScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white.withOpacity(_isLockedOut ? 0.05 : 0.1),
+          color: Colors.white.withValues(alpha:_isLockedOut ? 0.05 : 0.1),
         ),
         child: Center(
           child: isDelete
               ? Icon(
                   Icons.backspace_outlined,
-                  color: Colors.white.withOpacity(_isLockedOut ? 0.3 : 0.8),
+                  color: Colors.white.withValues(alpha:_isLockedOut ? 0.3 : 0.8),
                   size: 24,
                 )
               : Text(
@@ -163,7 +163,7 @@ class _PinLockScreenState extends ConsumerState<PinLockScreen> {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w300,
-                    color: Colors.white.withOpacity(_isLockedOut ? 0.3 : 1),
+                    color: Colors.white.withValues(alpha:_isLockedOut ? 0.3 : 1),
                   ),
                 ),
         ),

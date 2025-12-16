@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/children_provider.dart';
-import '../../providers/auth_provider.dart';
 import '../../models/child.dart';
 import '../children/add_child_screen.dart';
 import '../children/child_detail_screen.dart';
@@ -35,13 +34,6 @@ class DashboardScreen extends ConsumerWidget {
                 context,
                 MaterialPageRoute(builder: (_) => const SettingsScreen()),
               );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white70),
-            onPressed: () async {
-              final authService = ref.read(authServiceProvider);
-              await authService.signOut();
             },
           ),
         ],
@@ -98,7 +90,7 @@ class DashboardScreen extends ConsumerWidget {
             Icon(
               Icons.child_care,
               size: 80,
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha:0.3),
             ),
             const SizedBox(height: 24),
             const Text(
@@ -115,7 +107,7 @@ class DashboardScreen extends ConsumerWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.white.withOpacity(0.6),
+                color: Colors.white.withValues(alpha:0.6),
               ),
             ),
             const SizedBox(height: 32),
@@ -142,7 +134,7 @@ class DashboardScreen extends ConsumerWidget {
           'Willkommen zurück!',
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withValues(alpha:0.6),
           ),
         ),
         const SizedBox(height: 4),

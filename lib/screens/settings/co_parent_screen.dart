@@ -51,7 +51,7 @@ class _CoParentScreenState extends ConsumerState<CoParentScreen> {
         children: [
           Text(
             'Erstelle einen Code, den der andere Elternteil eingeben kann.',
-            style: TextStyle(color: Colors.white.withOpacity(0.7)),
+            style: TextStyle(color: Colors.white.withValues(alpha:0.7)),
           ),
           const SizedBox(height: 16),
           inviteCodeAsync.when(
@@ -73,9 +73,9 @@ class _CoParentScreenState extends ConsumerState<CoParentScreen> {
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha:0.05),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFF6C63FF).withOpacity(0.5)),
+            border: Border.all(color: const Color(0xFF6C63FF).withValues(alpha:0.5)),
           ),
           child: Column(
             children: [
@@ -92,7 +92,7 @@ class _CoParentScreenState extends ConsumerState<CoParentScreen> {
               const SizedBox(height: 8),
               Text(
                 'Noch ${info.daysRemaining} Tage gültig',
-                style: TextStyle(color: Colors.white.withOpacity(0.5)),
+                style: TextStyle(color: Colors.white.withValues(alpha:0.5)),
               ),
             ],
           ),
@@ -151,7 +151,7 @@ class _CoParentScreenState extends ConsumerState<CoParentScreen> {
         children: [
           Text(
             'Hast du einen Code vom anderen Elternteil erhalten?',
-            style: TextStyle(color: Colors.white.withOpacity(0.7)),
+            style: TextStyle(color: Colors.white.withValues(alpha:0.7)),
           ),
           const SizedBox(height: 16),
           SizedBox(
@@ -181,17 +181,17 @@ class _CoParentScreenState extends ConsumerState<CoParentScreen> {
             ? Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha:0.05),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: Colors.white.withOpacity(0.5)),
+                    Icon(Icons.info_outline, color: Colors.white.withValues(alpha:0.5)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Noch keine Elternteile verknüpft.',
-                        style: TextStyle(color: Colors.white.withOpacity(0.5)),
+                        style: TextStyle(color: Colors.white.withValues(alpha:0.5)),
                       ),
                     ),
                   ],
@@ -211,7 +211,7 @@ class _CoParentScreenState extends ConsumerState<CoParentScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha:0.05),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -234,7 +234,7 @@ class _CoParentScreenState extends ConsumerState<CoParentScreen> {
                 ),
                 Text(
                   'Verknüpft am ${_formatDate(coParent.linkedAt)}',
-                  style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12),
+                  style: TextStyle(color: Colors.white.withValues(alpha:0.5), fontSize: 12),
                 ),
               ],
             ),
@@ -256,7 +256,7 @@ class _CoParentScreenState extends ConsumerState<CoParentScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha:0.05),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -316,9 +316,9 @@ class _CoParentScreenState extends ConsumerState<CoParentScreen> {
           textAlign: TextAlign.center,
           decoration: InputDecoration(
             hintText: 'ABC123',
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha:0.3)),
             filled: true,
-            fillColor: Colors.white.withOpacity(0.1),
+            fillColor: Colors.white.withValues(alpha:0.1),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,

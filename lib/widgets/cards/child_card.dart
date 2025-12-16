@@ -21,13 +21,13 @@ class ChildCard extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              _getColorForAge(child.age).withOpacity(0.3),
-              _getColorForAge(child.age).withOpacity(0.1),
+              _getColorForAge(child.age).withValues(alpha:0.3),
+              _getColorForAge(child.age).withValues(alpha:0.1),
             ],
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha:0.1),
           ),
         ),
         child: Padding(
@@ -73,7 +73,7 @@ class ChildCard extends StatelessWidget {
                     '${child.age} Jahre',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha:0.6),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -93,8 +93,8 @@ class ChildCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isLinked
-            ? Colors.green.withOpacity(0.2)
-            : Colors.orange.withOpacity(0.2),
+            ? Colors.green.withValues(alpha:0.2)
+            : Colors.orange.withValues(alpha:0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -126,14 +126,14 @@ class ChildCard extends StatelessWidget {
         Icon(
           Icons.devices,
           size: 14,
-          color: Colors.white.withOpacity(0.4),
+          color: Colors.white.withValues(alpha:0.4),
         ),
         const SizedBox(width: 4),
         Text(
           '$deviceCount ${deviceCount == 1 ? 'Gerät' : 'Geräte'}',
           style: TextStyle(
             fontSize: 12,
-            color: Colors.white.withOpacity(0.4),
+            color: Colors.white.withValues(alpha:0.4),
           ),
         ),
       ],

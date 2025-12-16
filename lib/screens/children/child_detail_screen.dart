@@ -60,8 +60,8 @@ class ChildDetailScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF6C63FF).withOpacity(0.3),
-            const Color(0xFF6C63FF).withOpacity(0.1),
+            const Color(0xFF6C63FF).withValues(alpha:0.3),
+            const Color(0xFF6C63FF).withValues(alpha:0.1),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -98,14 +98,14 @@ class ChildDetailScreen extends ConsumerWidget {
                   '${child.age} Jahre alt',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha:0.7),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: child.isLinked ? Colors.green.withOpacity(0.2) : Colors.orange.withOpacity(0.2),
+                    color: child.isLinked ? Colors.green.withValues(alpha:0.2) : Colors.orange.withValues(alpha:0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -137,7 +137,7 @@ class ChildDetailScreen extends ConsumerWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withValues(alpha:0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -158,7 +158,7 @@ class ChildDetailScreen extends ConsumerWidget {
                       ? 'Code abgelaufen'
                       : 'Gültig bis ${_formatDate(child.parentCodeExpiresAt)}',
                   style: TextStyle(
-                    color: isExpired ? Colors.redAccent : Colors.white.withOpacity(0.5),
+                    color: isExpired ? Colors.redAccent : Colors.white.withValues(alpha:0.5),
                     fontSize: 12,
                   ),
                 ),
@@ -336,7 +336,7 @@ class ChildDetailScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha:0.05),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -345,7 +345,7 @@ class ChildDetailScreen extends ConsumerWidget {
           Text(
             'Sprache für Untertitel',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha:0.7),
               fontSize: 14,
             ),
           ),
@@ -369,18 +369,18 @@ class ChildDetailScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? const Color(0xFF6C63FF)
-                        : Colors.white.withOpacity(0.1),
+                        : Colors.white.withValues(alpha:0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: isSelected
                           ? const Color(0xFF6C63FF)
-                          : Colors.white.withOpacity(0.2),
+                          : Colors.white.withValues(alpha:0.2),
                     ),
                   ),
                   child: Text(
                     lang.nativeName,
                     style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.white.withOpacity(0.8),
+                      color: isSelected ? Colors.white : Colors.white.withValues(alpha:0.8),
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
@@ -413,7 +413,7 @@ class ChildDetailScreen extends ConsumerWidget {
           Text(
             'Aktiviere oder deaktiviere einzelne Spiele für ${child.name}.',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.6),
+              color: Colors.white.withValues(alpha:0.6),
               fontSize: 13,
             ),
           ),
@@ -461,12 +461,12 @@ class ChildDetailScreen extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(isEnabled ? 0.08 : 0.03),
+        color: Colors.white.withValues(alpha:isEnabled ? 0.08 : 0.03),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isEnabled
-              ? const Color(0xFF6C63FF).withOpacity(0.3)
-              : Colors.white.withOpacity(0.1),
+              ? const Color(0xFF6C63FF).withValues(alpha:0.3)
+              : Colors.white.withValues(alpha:0.1),
         ),
       ),
       child: Row(
@@ -492,7 +492,7 @@ class ChildDetailScreen extends ConsumerWidget {
                   Text(
                     'Nur in Lianko',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.4),
+                      color: Colors.white.withValues(alpha:0.4),
                       fontSize: 11,
                     ),
                   ),
@@ -502,7 +502,7 @@ class ChildDetailScreen extends ConsumerWidget {
           Switch(
             value: isEnabled,
             onChanged: onChanged,
-            activeColor: const Color(0xFF6C63FF),
+            activeTrackColor: const Color(0xFF6C63FF),
           ),
         ],
       ),
@@ -517,21 +517,21 @@ class ChildDetailScreen extends ConsumerWidget {
           ? Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withValues(alpha:0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
                   Icon(
                     Icons.info_outline,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha:0.5),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Noch keine Geräte verbunden.\nGib den Code in der Kinder-App ein.',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha:0.5),
                       ),
                     ),
                   ),
@@ -613,7 +613,7 @@ class ChildDetailScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha:0.05),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -650,7 +650,7 @@ class ChildDetailScreen extends ConsumerWidget {
           Expanded(
             child: Text(
               label,
-              style: TextStyle(color: Colors.white.withOpacity(0.7)),
+              style: TextStyle(color: Colors.white.withValues(alpha:0.7)),
             ),
           ),
           Text(
@@ -686,7 +686,7 @@ class ChildDetailScreen extends ConsumerWidget {
                 Text(
                   subtitle,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha:0.5),
                     fontSize: 12,
                   ),
                 ),
@@ -696,7 +696,7 @@ class ChildDetailScreen extends ConsumerWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: const Color(0xFF6C63FF),
+            activeTrackColor: const Color(0xFF6C63FF),
           ),
         ],
       ),

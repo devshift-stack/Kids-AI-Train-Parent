@@ -68,9 +68,9 @@ class _AddChildScreenState extends ConsumerState<AddChildScreen> {
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 hintText: 'Name eingeben',
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
+                hintStyle: TextStyle(color: Colors.white.withValues(alpha:0.4)),
                 filled: true,
-                fillColor: Colors.white.withOpacity(0.1),
+                fillColor: Colors.white.withValues(alpha:0.1),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -138,7 +138,7 @@ class _AddChildScreenState extends ConsumerState<AddChildScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha:0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -157,7 +157,7 @@ class _AddChildScreenState extends ConsumerState<AddChildScreen> {
               activeTrackColor: const Color(0xFF6C63FF),
               inactiveTrackColor: Colors.white24,
               thumbColor: const Color(0xFF6C63FF),
-              overlayColor: const Color(0xFF6C63FF).withOpacity(0.2),
+              overlayColor: const Color(0xFF6C63FF).withValues(alpha:0.2),
             ),
             child: Slider(
               value: _selectedAge.toDouble(),
@@ -177,11 +177,11 @@ class _AddChildScreenState extends ConsumerState<AddChildScreen> {
             children: [
               Text(
                 '3 Jahre',
-                style: TextStyle(color: Colors.white.withOpacity(0.5)),
+                style: TextStyle(color: Colors.white.withValues(alpha:0.5)),
               ),
               Text(
                 '12 Jahre',
-                style: TextStyle(color: Colors.white.withOpacity(0.5)),
+                style: TextStyle(color: Colors.white.withValues(alpha:0.5)),
               ),
             ],
           ),
@@ -201,7 +201,7 @@ class _AddChildScreenState extends ConsumerState<AddChildScreen> {
             height: 100,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.green.withOpacity(0.2),
+              color: Colors.green.withValues(alpha:0.2),
             ),
             child: const Icon(
               Icons.check,
@@ -224,7 +224,7 @@ class _AddChildScreenState extends ConsumerState<AddChildScreen> {
             'Gib diesen Code in der Kinder-App ein:',
             style: TextStyle(
               fontSize: 16,
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha:0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -235,7 +235,7 @@ class _AddChildScreenState extends ConsumerState<AddChildScreen> {
             'Gültig für 7 Tage',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha:0.5),
             ),
           ),
           const SizedBox(height: 48),
@@ -276,10 +276,10 @@ class _AddChildScreenState extends ConsumerState<AddChildScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha:0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF6C63FF).withOpacity(0.5),
+          color: const Color(0xFF6C63FF).withValues(alpha:0.5),
           width: 2,
         ),
       ),

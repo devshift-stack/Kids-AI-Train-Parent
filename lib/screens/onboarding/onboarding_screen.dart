@@ -87,7 +87,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Text(
                     'Überspringen',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha:0.6),
                       fontSize: 14,
                     ),
                   ),
@@ -162,7 +162,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             width: 160,
             height: 160,
             decoration: BoxDecoration(
-              color: page.color.withOpacity(0.15),
+              color: page.color.withValues(alpha:0.15),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -190,7 +190,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             page.description,
             style: TextStyle(
               fontSize: 16,
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha:0.7),
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -207,7 +207,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       width: isActive ? 24 : 8,
       height: 8,
       decoration: BoxDecoration(
-        color: isActive ? _pages[_currentPage].color : Colors.white.withOpacity(0.3),
+        color: isActive ? _pages[_currentPage].color : Colors.white.withValues(alpha:0.3),
         borderRadius: BorderRadius.circular(4),
       ),
     );

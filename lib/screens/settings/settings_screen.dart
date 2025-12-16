@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/pin_provider.dart';
 import 'co_parent_screen.dart';
 
@@ -55,7 +54,7 @@ class SettingsScreen extends ConsumerWidget {
                       _showDisablePinDialog(context, ref);
                     }
                   },
-                  activeColor: const Color(0xFF6C63FF),
+                  activeTrackColor: const Color(0xFF6C63FF),
                 ),
               ),
               if (pinConfig.isPinEnabled)
@@ -65,19 +64,6 @@ class SettingsScreen extends ConsumerWidget {
                   subtitle: 'Neuen PIN festlegen',
                   onTap: () => _showChangePinDialog(context, ref),
                 ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _buildSection(
-            title: 'Konto',
-            children: [
-              _buildSettingTile(
-                icon: Icons.logout,
-                title: 'Abmelden',
-                subtitle: 'Von diesem Gerät abmelden',
-                onTap: () => _confirmLogout(context, ref),
-                textColor: Colors.redAccent,
-              ),
             ],
           ),
         ],
@@ -97,7 +83,7 @@ class SettingsScreen extends ConsumerWidget {
           child: Text(
             title,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha:0.5),
               fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
@@ -105,7 +91,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha:0.05),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(children: children),
@@ -130,7 +116,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12),
+        style: TextStyle(color: Colors.white.withValues(alpha:0.5), fontSize: 12),
       ),
       trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.white24),
       onTap: onTap,
@@ -154,9 +140,9 @@ class SettingsScreen extends ConsumerWidget {
           style: const TextStyle(color: Colors.white, fontSize: 24, letterSpacing: 8),
           decoration: InputDecoration(
             hintText: '••••',
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha:0.3)),
             filled: true,
-            fillColor: Colors.white.withOpacity(0.1),
+            fillColor: Colors.white.withValues(alpha:0.1),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -208,7 +194,7 @@ class SettingsScreen extends ConsumerWidget {
               style: const TextStyle(color: Colors.white, fontSize: 24, letterSpacing: 8),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white.withOpacity(0.1),
+                fillColor: Colors.white.withValues(alpha:0.1),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -263,9 +249,9 @@ class SettingsScreen extends ConsumerWidget {
               style: const TextStyle(color: Colors.white, fontSize: 20, letterSpacing: 8),
               decoration: InputDecoration(
                 labelText: 'Alter PIN',
-                labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                labelStyle: TextStyle(color: Colors.white.withValues(alpha:0.5)),
                 filled: true,
-                fillColor: Colors.white.withOpacity(0.1),
+                fillColor: Colors.white.withValues(alpha:0.1),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -282,9 +268,9 @@ class SettingsScreen extends ConsumerWidget {
               style: const TextStyle(color: Colors.white, fontSize: 20, letterSpacing: 8),
               decoration: InputDecoration(
                 labelText: 'Neuer PIN',
-                labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                labelStyle: TextStyle(color: Colors.white.withValues(alpha:0.5)),
                 filled: true,
-                fillColor: Colors.white.withOpacity(0.1),
+                fillColor: Colors.white.withValues(alpha:0.1),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -324,33 +310,4 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF2D2D44),
-        title: const Text('Abmelden?', style: TextStyle(color: Colors.white)),
-        content: const Text(
-          'Möchtest du dich wirklich abmelden?',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Abbrechen'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-            child: const Text('Abmelden'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true) {
-      final authService = ref.read(authServiceProvider);
-      await authService.signOut();
-    }
-  }
 }

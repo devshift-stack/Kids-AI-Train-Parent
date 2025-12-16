@@ -143,10 +143,10 @@ class _TimeLimitScreenState extends ConsumerState<TimeLimitScreen> {
                   ),
                   subtitle: Text(
                     'Kein Spielen während der Schlafenszeit',
-                    style: TextStyle(color: Colors.white.withOpacity(0.5)),
+                    style: TextStyle(color: Colors.white.withValues(alpha:0.5)),
                   ),
                   value: _bedtimeEnabled,
-                  activeColor: const Color(0xFF6C63FF),
+                  activeTrackColor: const Color(0xFF6C63FF),
                   onChanged: (v) {
                     setState(() => _bedtimeEnabled = v);
                     _markChanged();
@@ -192,7 +192,7 @@ class _TimeLimitScreenState extends ConsumerState<TimeLimitScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha:0.05),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -243,7 +243,7 @@ class _TimeLimitScreenState extends ConsumerState<TimeLimitScreen> {
           max: max,
           divisions: divisions,
           activeColor: const Color(0xFF6C63FF),
-          inactiveColor: Colors.white.withOpacity(0.2),
+          inactiveColor: Colors.white.withValues(alpha:0.2),
           onChanged: onChanged,
         ),
         Row(
@@ -251,11 +251,11 @@ class _TimeLimitScreenState extends ConsumerState<TimeLimitScreen> {
           children: [
             Text(
               '${min.round()} Min',
-              style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12),
+              style: TextStyle(color: Colors.white.withValues(alpha:0.5), fontSize: 12),
             ),
             Text(
               '${max.round()} Min',
-              style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12),
+              style: TextStyle(color: Colors.white.withValues(alpha:0.5), fontSize: 12),
             ),
           ],
         ),
@@ -273,7 +273,7 @@ class _TimeLimitScreenState extends ConsumerState<TimeLimitScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha:0.1),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -281,7 +281,7 @@ class _TimeLimitScreenState extends ConsumerState<TimeLimitScreen> {
             Text(
               label,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha:0.5),
                 fontSize: 12,
               ),
             ),
@@ -334,9 +334,9 @@ class _TimeLimitScreenState extends ConsumerState<TimeLimitScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF6C63FF).withOpacity(0.1),
+        color: const Color(0xFF6C63FF).withValues(alpha:0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF6C63FF).withOpacity(0.3)),
+        border: Border.all(color: const Color(0xFF6C63FF).withValues(alpha:0.3)),
       ),
       child: Row(
         children: [
@@ -346,7 +346,7 @@ class _TimeLimitScreenState extends ConsumerState<TimeLimitScreen> {
             child: Text(
               'Änderungen werden sofort auf alle verbundenen Geräte übertragen.',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha:0.8),
                 fontSize: 13,
               ),
             ),

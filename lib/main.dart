@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'core/theme/parent_theme.dart';
-import 'providers/auth_provider.dart';
 import 'providers/pin_provider.dart';
 import 'providers/onboarding_provider.dart';
 import 'screens/auth/pin_lock_screen.dart';
@@ -16,6 +16,11 @@ void main() async {
 
   // Firebase initialisieren
   await Firebase.initializeApp();
+
+  // Anonymous Auth (automatisch)
+  if (FirebaseAuth.instance.currentUser == null) {
+    await FirebaseAuth.instance.signInAnonymously();
+  }
 
   // Status bar transparent
   SystemChrome.setSystemUIOverlayStyle(
@@ -42,21 +47,19 @@ class ParentApp extends StatelessWidget {
   }
 }
 
-/// Root Widget das Onboarding, Auth-State und PIN-Lock verwaltet
+/// Root Widget: Onboarding → PIN → Dashboard
 class AppRoot extends ConsumerWidget {
   const AppRoot({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final onboardingCompleted = ref.watch(onboardingCompletedProvider);
-    final authState = ref.watch(authStateProvider);
     final pinState = ref.watch(pinUnlockStateProvider);
 
     // Erst Onboarding prüfen
     return onboardingCompleted.when(
       data: (completed) {
         if (!completed) {
-          // Onboarding noch nicht abgeschlossen
           return OnboardingScreen(
             onComplete: () {
               ref.invalidate(onboardingCompletedProvider);
@@ -64,28 +67,16 @@ class AppRoot extends ConsumerWidget {
           );
         }
 
-        // Onboarding fertig -> Auth prüfen
-        return authState.when(
-          data: (user) {
-            if (user == null) {
-              // Nicht eingeloggt -> Login Screen
-              return const LoginScreen();
-            }
-
-            // Eingeloggt -> PIN-Check
-            switch (pinState) {
-              case PinUnlockState.loading:
-                return const LoadingScreen();
-              case PinUnlockState.locked:
-                return const PinLockScreen();
-              case PinUnlockState.unlocked:
-              case PinUnlockState.noPinSet:
-                return const DashboardScreen();
-            }
-          },
-          loading: () => const LoadingScreen(),
-          error: (error, _) => ErrorScreen(message: error.toString()),
-        );
+        // Onboarding fertig → PIN prüfen
+        switch (pinState) {
+          case PinUnlockState.loading:
+            return const LoadingScreen();
+          case PinUnlockState.locked:
+            return const PinLockScreen();
+          case PinUnlockState.unlocked:
+          case PinUnlockState.noPinSet:
+            return const DashboardScreen();
+        }
       },
       loading: () => const LoadingScreen(),
       error: (error, _) => ErrorScreen(message: error.toString()),
@@ -135,165 +126,5 @@ class ErrorScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-/// Login Screen (Placeholder - kann erweitert werden)
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
-
-  @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isLogin = true;
-  bool _isLoading = false;
-  String? _errorMessage;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 48),
-              Icon(
-                Icons.family_restroom,
-                size: 64,
-                color: ParentTheme.primary,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                _isLogin ? 'Willkommen zurück!' : 'Konto erstellen',
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                _isLogin
-                    ? 'Melde dich an um deine Kinder zu verwalten'
-                    : 'Erstelle ein Konto für das Eltern-Dashboard',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white.withOpacity(0.6),
-                ),
-              ),
-              const SizedBox(height: 48),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  hintText: 'E-Mail',
-                  hintStyle: TextStyle(color: Colors.white38),
-                  prefixIcon: Icon(Icons.email, color: Colors.white54),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  hintText: 'Passwort',
-                  hintStyle: TextStyle(color: Colors.white38),
-                  prefixIcon: Icon(Icons.lock, color: Colors.white54),
-                ),
-              ),
-              if (_errorMessage != null) ...[
-                const SizedBox(height: 16),
-                Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.redAccent),
-                ),
-              ],
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submit,
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : Text(
-                          _isLogin ? 'Anmelden' : 'Registrieren',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _isLogin = !_isLogin;
-                      _errorMessage = null;
-                    });
-                  },
-                  child: Text(
-                    _isLogin
-                        ? 'Noch kein Konto? Registrieren'
-                        : 'Bereits ein Konto? Anmelden',
-                    style: TextStyle(color: ParentTheme.primary),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _submit() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
-
-    if (email.isEmpty || password.isEmpty) {
-      setState(() {
-        _errorMessage = 'Bitte E-Mail und Passwort eingeben';
-      });
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    final authService = ref.read(authServiceProvider);
-    final result = _isLogin
-        ? await authService.signInWithEmail(email, password)
-        : await authService.registerWithEmail(email, password);
-
-    setState(() {
-      _isLoading = false;
-      if (!result.isSuccess) {
-        _errorMessage = result.errorMessage;
-      }
-    });
   }
 }

@@ -7,12 +7,12 @@ final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
   return FirebaseAuth.instance;
 });
 
-/// Provider für aktuellen User
+/// Provider für aktuellen User (Anonymous)
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.watch(firebaseAuthProvider).authStateChanges();
 });
 
-/// Provider für Parent-ID (= Firebase User UID)
+/// Provider für Parent-ID (= Firebase Anonymous User UID)
 final parentIdProvider = Provider<String?>((ref) {
   final authState = ref.watch(authStateProvider);
   return authState.when(
@@ -27,7 +27,7 @@ final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService(ref.watch(firebaseAuthProvider));
 });
 
-/// Auth Service für Anmeldung/Registrierung
+/// Auth Service für Anonymous Authentication
 class AuthService {
   final FirebaseAuth _auth;
 
@@ -36,56 +36,36 @@ class AuthService {
   User? get currentUser => _auth.currentUser;
   String? get parentId => currentUser?.uid;
 
-  /// Registrierung mit E-Mail
-  Future<AuthResult> registerWithEmail(String email, String password) async {
+  /// Prüft ob User eingeloggt ist
+  bool get isSignedIn => currentUser != null;
+
+  /// Anonymous Login (automatisch beim App-Start)
+  Future<AuthResult> signInAnonymously() async {
     try {
-      final credential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      // Prüfe ob bereits eingeloggt
+      if (_auth.currentUser != null) {
+        return AuthResult.success(_auth.currentUser!);
+      }
+
+      // Anonymous Sign-In
+      final credential = await _auth.signInAnonymously();
 
       if (credential.user != null) {
         await _createParentDocument(credential.user!);
         return AuthResult.success(credential.user!);
       }
 
-      return AuthResult.error('Registrierung fehlgeschlagen');
-    } on FirebaseAuthException catch (e) {
-      return AuthResult.error(_mapFirebaseError(e.code));
-    }
-  }
-
-  /// Anmeldung mit E-Mail
-  Future<AuthResult> signInWithEmail(String email, String password) async {
-    try {
-      final credential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      if (credential.user != null) {
-        return AuthResult.success(credential.user!);
-      }
-
       return AuthResult.error('Anmeldung fehlgeschlagen');
     } on FirebaseAuthException catch (e) {
       return AuthResult.error(_mapFirebaseError(e.code));
+    } catch (e) {
+      return AuthResult.error('Fehler: $e');
     }
   }
 
-  /// Abmelden
+  /// Abmelden (löscht lokale Daten, erstellt neuen Anonymous User)
   Future<void> signOut() async {
     await _auth.signOut();
-  }
-
-  /// Passwort zurücksetzen
-  Future<AuthResult> resetPassword(String email) async {
-    try {
-      await _auth.sendPasswordResetEmail(email: email);
-      return AuthResult.success(null);
-    } on FirebaseAuthException catch (e) {
-      return AuthResult.error(_mapFirebaseError(e.code));
-    }
   }
 
   /// Erstellt Parent-Dokument in Firestore
@@ -95,7 +75,7 @@ class AuthService {
 
     if (!doc.exists) {
       await docRef.set({
-        'email': user.email,
+        'isAnonymous': true,
         'createdAt': Timestamp.now(),
         'updatedAt': Timestamp.now(),
       });
@@ -105,18 +85,8 @@ class AuthService {
   /// Mappt Firebase Error Codes zu deutschen Meldungen
   String _mapFirebaseError(String code) {
     switch (code) {
-      case 'email-already-in-use':
-        return 'Diese E-Mail wird bereits verwendet';
-      case 'invalid-email':
-        return 'Ungültige E-Mail-Adresse';
-      case 'weak-password':
-        return 'Passwort ist zu schwach';
-      case 'user-not-found':
-        return 'Kein Konto mit dieser E-Mail gefunden';
-      case 'wrong-password':
-        return 'Falsches Passwort';
-      case 'user-disabled':
-        return 'Dieses Konto wurde deaktiviert';
+      case 'operation-not-allowed':
+        return 'Anonymous Auth ist nicht aktiviert';
       case 'too-many-requests':
         return 'Zu viele Versuche. Bitte später erneut versuchen.';
       default:
