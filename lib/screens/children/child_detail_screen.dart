@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/child.dart';
 import '../../models/accessibility_settings.dart';
 import '../../providers/children_provider.dart';
+import 'time_limit_screen.dart';
 
 class ChildDetailScreen extends ConsumerWidget {
   final Child child;
@@ -39,13 +40,13 @@ class ChildDetailScreen extends ConsumerWidget {
             const SizedBox(height: 24),
             _buildTimeLimitSection(context),
             const SizedBox(height: 24),
-            _buildLeaderboardSection(context),
+            _buildLeaderboardSection(context, ref),
             const SizedBox(height: 24),
             _buildSubtitlesSection(context, ref),
             const SizedBox(height: 24),
             _buildGamesSection(context, ref),
             const SizedBox(height: 24),
-            _buildLinkedDevicesSection(),
+            _buildLinkedDevicesSection(context, ref),
             const SizedBox(height: 100),
           ],
         ),
@@ -231,7 +232,12 @@ class ChildDetailScreen extends ConsumerWidget {
             width: double.infinity,
             child: OutlinedButton(
               onPressed: () {
-                // TODO: Navigate to time limit settings
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => TimeLimitScreen(child: child),
+                  ),
+                );
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.white,
@@ -245,7 +251,7 @@ class ChildDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLeaderboardSection(BuildContext context) {
+  Widget _buildLeaderboardSection(BuildContext context, WidgetRef ref) {
     final consent = child.leaderboardConsent;
 
     return _buildSection(
@@ -257,16 +263,26 @@ class ChildDetailScreen extends ConsumerWidget {
             'Ranglisten sehen',
             'Kind kann Ranglisten anderer sehen',
             consent.canSeeLeaderboard,
-            (value) {
-              // TODO: Update leaderboard consent
+            (value) async {
+              final notifier = ref.read(childrenNotifierProvider.notifier);
+              await notifier.updateChild(
+                child.copyWith(
+                  leaderboardConsent: consent.copyWith(canSeeLeaderboard: value),
+                ),
+              );
             },
           ),
           _buildToggleRow(
             'Auf Ranglisten erscheinen',
             'Kind ist für andere sichtbar',
             consent.canBeOnLeaderboard,
-            (value) {
-              // TODO: Update leaderboard consent
+            (value) async {
+              final notifier = ref.read(childrenNotifierProvider.notifier);
+              await notifier.updateChild(
+                child.copyWith(
+                  leaderboardConsent: consent.copyWith(canBeOnLeaderboard: value),
+                ),
+              );
             },
           ),
           if (consent.canBeOnLeaderboard) ...[
@@ -493,7 +509,7 @@ class ChildDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLinkedDevicesSection() {
+  Widget _buildLinkedDevicesSection(BuildContext context, WidgetRef ref) {
     return _buildSection(
       title: 'Verbundene Geräte',
       icon: Icons.devices,
@@ -532,14 +548,61 @@ class ChildDetailScreen extends ConsumerWidget {
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.link_off, color: Colors.redAccent),
-                    onPressed: () {
-                      // TODO: Unlink device
-                    },
+                    onPressed: () => _confirmUnlinkDevice(context, ref, deviceId),
                   ),
                 );
               }).toList(),
             ),
     );
+  }
+
+  Future<void> _confirmUnlinkDevice(BuildContext context, WidgetRef ref, String deviceId) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF2D2D44),
+        title: const Text(
+          'Gerät trennen?',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          'Das Gerät wird getrennt und muss sich mit einem neuen Code erneut verbinden.',
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Abbrechen'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+            ),
+            child: const Text('Trennen'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      final notifier = ref.read(childrenNotifierProvider.notifier);
+      final updatedDeviceIds = List<String>.from(child.linkedDeviceIds)
+        ..remove(deviceId);
+
+      await notifier.updateChild(
+        child.copyWith(
+          linkedDeviceIds: updatedDeviceIds,
+          isLinked: updatedDeviceIds.isNotEmpty,
+        ),
+      );
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gerät getrennt')),
+        );
+      }
+    }
   }
 
   Widget _buildSection({
