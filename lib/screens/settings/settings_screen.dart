@@ -93,6 +93,12 @@ class SettingsScreen extends ConsumerWidget {
         return 'English';
       case 'tr':
         return 'Türkçe';
+      case 'bs':
+        return 'Bosanski';
+      case 'sr':
+        return 'Srpski';
+      case 'hr':
+        return 'Hrvatski';
       default:
         return 'Deutsch';
     }
@@ -103,6 +109,9 @@ class SettingsScreen extends ConsumerWidget {
       {'code': 'de', 'name': 'Deutsch', 'flag': '🇩🇪'},
       {'code': 'en', 'name': 'English', 'flag': '🇬🇧'},
       {'code': 'tr', 'name': 'Türkçe', 'flag': '🇹🇷'},
+      {'code': 'bs', 'name': 'Bosanski', 'flag': '🇧🇦'},
+      {'code': 'sr', 'name': 'Srpski', 'flag': '🇷🇸'},
+      {'code': 'hr', 'name': 'Hrvatski', 'flag': '🇭🇷'},
     ];
 
     await showModalBottomSheet(
