@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:kids_ai_train_parent/services/pin_service.dart';
+import 'package:kids_ai_parent/services/pin_service.dart';
 
 void main() {
   group('PinService', () {

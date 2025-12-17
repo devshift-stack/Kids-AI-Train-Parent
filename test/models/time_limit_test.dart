@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kids_ai_train_parent/models/time_limit.dart';
+import 'package:kids_ai_parent/models/time_limit.dart';
 
 void main() {
   group('TimeLimit', () {
