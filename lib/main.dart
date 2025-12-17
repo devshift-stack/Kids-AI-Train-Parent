@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'firebase_options.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'core/theme/parent_theme.dart';
@@ -21,7 +22,9 @@ void main() async {
   await EasyLocalization.ensureInitialized();
 
   // Firebase initialisieren
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Firebase Messaging Background Handler registrieren
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);

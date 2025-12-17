@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "153773777928",
+    "project_id": "kids-ai-train",
+    "storage_bucket": "kids-ai-train.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153773777928:android:c86bec49038b775f10ddbd",
+        "android_client_info": {
+          "package_name": "com.kidsai.parent.kids_ai_parent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0klStcKs2GgBeFNiS12qqFmXz_XJLVt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
